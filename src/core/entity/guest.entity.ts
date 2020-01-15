@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { HotelEntity } from './hotel.entity';
 import { RoomEntity } from './room.entity';
+import { WakeUpEntity } from './wake-up.entity';
 
 @Entity('guest')
 export class GuestEntity {
@@ -34,4 +35,7 @@ export class GuestEntity {
   @OneToOne(() => RoomEntity, room => room.guest)
   @JoinColumn()
   room!: RoomEntity;
+
+  @OneToMany(() => WakeUpEntity, wakeUp => wakeUp.guest)
+  wakeUps!: WakeUpEntity[];
 }

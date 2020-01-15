@@ -6,10 +6,12 @@ import { EmployerService } from '../core/services/employer/employer.service';
 import { HotelService } from '../core/services/hotel/hotel.service';
 import { UserService } from '../core/services/user/user.service';
 import { RoomService } from '../core/services/room/room.service';
+import { GuestService } from '../core/services/guest/guest.service';
+import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature(entities)],
   controllers: [HotelController],
-  providers: [HotelService, EmployerService, RoomService, UserService],
+  providers: [HotelService, EmployerService, RoomService, UserService, GuestService, WakeUpService],
 })
 export class HotelModule {}

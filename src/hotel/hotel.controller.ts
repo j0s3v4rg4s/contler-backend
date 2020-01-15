@@ -4,6 +4,8 @@ import { ZoneEntity } from '../core/entity';
 import { HotelService } from '../core/services/hotel/hotel.service';
 import { EmployerService } from '../core/services/employer/employer.service';
 import { RoomService } from '../core/services/room/room.service';
+import { GuestService } from '../core/services/guest/guest.service';
+import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 
 @Controller('hotel')
 export class HotelController {
@@ -11,6 +13,8 @@ export class HotelController {
     private hotelService: HotelService,
     private employerService: EmployerService,
     private roomService: RoomService,
+    private guestService: GuestService,
+    private wakeService: WakeUpService,
   ) {}
 
   @Get('category')
@@ -48,8 +52,13 @@ export class HotelController {
     return this.roomService.createRoom(name, id);
   }
 
-  @Get(':id/room')
-  getRooms(@Param('id') id: string) {
-    return this.roomService.getRooms(id);
+  @Get(':id/guest')
+  getGuest(@Param('id') id: string) {
+    return this.guestService.getGuestByHotel(id);
+  }
+
+  @Get(':id/wake')
+  getWake(@Param('id') id: string) {
+    return this.wakeService.getWakeByHotel(id);
   }
 }

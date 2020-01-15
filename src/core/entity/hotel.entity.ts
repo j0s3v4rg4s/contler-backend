@@ -3,6 +3,7 @@ import { EmployerEntity } from './employer.entity';
 import { ZoneEntity } from './zone.entity';
 import { RoomEntity } from './room.entity';
 import { GuestEntity } from './guest.entity';
+import { WakeUpEntity } from './wake-up.entity';
 
 @Entity({ name: 'hotel' })
 export class HotelEntity {
@@ -30,4 +31,7 @@ export class HotelEntity {
 
   @OneToMany(() => GuestEntity, guest => guest.hotel)
   guests!: GuestEntity[];
+
+  @OneToMany(() => WakeUpEntity, wakeUp => wakeUp.hotel)
+  wakeUps!: WakeUpEntity[];
 }

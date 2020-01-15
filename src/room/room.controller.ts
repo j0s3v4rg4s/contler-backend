@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Put } from '@nestjs/common';
 import { RoomEntity } from '../core/entity';
 import { RoomService } from '../core/services/room/room.service';
 
@@ -11,8 +11,8 @@ export class RoomController {
     return this.roomService.updateRoom(room);
   }
 
-  @Delete()
-  deleteRoom(@Body() room: RoomEntity) {
-    return this.roomService.deleteRoom(room);
+  @Delete(':id')
+  deleteRoom(@Param('id') id: string) {
+    return this.roomService.deleteRoom(id);
   }
 }

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ZoneRequest } from '../../models/zone-request';
 import { CategoryEntity } from '../../entity/category.entity';
+
 @Injectable()
 export class HotelService {
   constructor(
@@ -40,7 +41,7 @@ export class HotelService {
 
   async getZonesByHotel(hotelId: string) {
     const hotel = await this.hotelRepository.findOne({ uid: hotelId });
-    return this.zoneRepository.find({ where: { hotel } });
+    return this.zoneRepository.find({ where: { hotel }, relations: ['category'] });
   }
 
   getZonesByIds(ids: string[]) {

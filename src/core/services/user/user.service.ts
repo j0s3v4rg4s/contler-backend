@@ -18,4 +18,8 @@ export class UserService {
       throw new HttpException(errorInfo.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  disableUser(uid: string) {
+    auth().updateUser(uid, { disabled: true });
+  }
 }

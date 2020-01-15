@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HotelModule } from './hotel/hotel.module';
 import { EmployerModule } from './employer/employer.module';
 import { RoomModule } from './room/room.module';
+import { GuestModule } from './guest/guest.module';
+import { WakeUpModule } from './wake-up/wake-up.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -26,6 +28,8 @@ dotenv.config({
     HotelModule,
     EmployerModule,
     RoomModule,
+    GuestModule,
+    WakeUpModule,
   ],
   controllers: [AppController],
   providers: [AppService],

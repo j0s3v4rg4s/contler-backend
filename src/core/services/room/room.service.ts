@@ -23,12 +23,16 @@ export class RoomService {
     return this.roomRepository.save(room);
   }
 
-  deleteRoom(room: RoomEntity) {
-    return this.roomRepository.delete({ uid: room.uid });
+  deleteRoom(id: string) {
+    return this.roomRepository.delete({ uid: id });
   }
 
   async getRooms(hotelId: string) {
     const hotel = await this.hotelService.getHotel(hotelId);
-    return this.roomRepository.find({ hotel });
+    return this.roomRepository.find({ where: { hotel }, relations: ['guest'] });
+  }
+
+  getRoom(roomId: string) {
+    return this.roomRepository.findOne({ uid: roomId });
   }
 }
