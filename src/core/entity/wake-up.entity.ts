@@ -15,6 +15,9 @@ export class WakeUpEntity {
   time!: Date;
 
   @Column()
+  competeDate!: Date;
+
+  @Column()
   name!: string;
 
   @ManyToOne(() => HotelEntity, hotel => hotel.wakeUps)
