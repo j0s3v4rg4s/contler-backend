@@ -1,6 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { HotelEntity } from './hotel.entity';
 import { ZoneEntity } from './zone.entity';
+import { RequestEntity } from './request.entity';
 
 @Entity({ name: 'employer' })
 export class EmployerEntity {
@@ -20,13 +21,19 @@ export class EmployerEntity {
   totalScore!: number;
 
   @Column({ default: 0 })
+  averageScore!: number;
+
+  @Column({ default: 0 })
   totalServices!: number;
 
   @Column({ default: 0, type: 'numeric' })
   totalTime!: number;
 
-  @Column({default: true})
+  @Column({ default: true })
   active!: boolean;
+
+  @Column({ nullable: true })
+  pushToken!: string;
 
   @ManyToOne(() => HotelEntity, hotel => hotel.employees)
   hotel!: HotelEntity;
@@ -34,4 +41,10 @@ export class EmployerEntity {
   @ManyToMany(() => ZoneEntity, zone => zone.leaders)
   @JoinTable({ name: 'leaders' })
   leaderZones!: ZoneEntity[];
+
+  @OneToMany(() => RequestEntity, request => request.attended)
+  requestAttended!: RequestEntity[];
+
+  @OneToMany(() => RequestEntity, request => request.solved)
+  requestSolved!: RequestEntity[];
 }

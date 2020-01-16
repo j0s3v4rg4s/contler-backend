@@ -41,7 +41,7 @@ export class HotelService {
 
   async getZonesByHotel(hotelId: string) {
     const hotel = await this.hotelRepository.findOne({ uid: hotelId });
-    return this.zoneRepository.find({ where: { hotel }, relations: ['category'] });
+    return this.zoneRepository.find({ where: { hotel }, relations: ['category', 'leaders'] });
   }
 
   getZonesByIds(ids: string[]) {

@@ -1,7 +1,8 @@
-import { Column, Entity, Generated, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Generated, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { HotelEntity } from './hotel.entity';
 import { CategoryEntity } from './category.entity';
 import { EmployerEntity } from './employer.entity';
+import { RequestEntity } from './request.entity';
 
 @Entity('zone')
 export class ZoneEntity {
@@ -26,4 +27,7 @@ export class ZoneEntity {
 
   @ManyToMany(() => EmployerEntity, employer => employer.leaderZones)
   leaders: EmployerEntity[];
+
+  @OneToMany(() => RequestEntity, request => request.zone)
+  request!: RequestEntity[];
 }

@@ -2,6 +2,7 @@ import { Column, Entity, Generated, ManyToOne, OneToMany, OneToOne, PrimaryColum
 import { HotelEntity } from './hotel.entity';
 import { GuestEntity } from './guest.entity';
 import { WakeUpEntity } from './wake-up.entity';
+import { RequestEntity } from './request.entity';
 
 @Entity('room')
 export class RoomEntity {
@@ -20,4 +21,7 @@ export class RoomEntity {
 
   @OneToMany(() => WakeUpEntity, wakeUp => wakeUp.room)
   wakeUps!: WakeUpEntity[];
+
+  @OneToMany(() => RequestEntity, request => request.room)
+  request!: RequestEntity[];
 }

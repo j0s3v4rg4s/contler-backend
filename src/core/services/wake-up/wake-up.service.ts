@@ -64,7 +64,7 @@ export class WakeUpService {
 
   async getWakeByGuest(id: string) {
     const guest = await this.guestService.getGuest(id);
-    return this.wakeUpRepository.find({ where: { guest }, relations: ['room', 'guest'] });
+    return this.wakeUpRepository.find({ where: { guest }, relations: ['room', 'guest'], order: {competeDate: 'ASC'} });
   }
 
   completeWake(id: number) {

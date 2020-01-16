@@ -7,6 +7,7 @@ import { EmployerModule } from './employer/employer.module';
 import { RoomModule } from './room/room.module';
 import { GuestModule } from './guest/guest.module';
 import { WakeUpModule } from './wake-up/wake-up.module';
+import { RequestModule } from './request/request.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -30,6 +31,7 @@ dotenv.config({
     RoomModule,
     GuestModule,
     WakeUpModule,
+    RequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

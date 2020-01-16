@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColu
 import { HotelEntity } from './hotel.entity';
 import { RoomEntity } from './room.entity';
 import { WakeUpEntity } from './wake-up.entity';
+import { RequestEntity } from './request.entity';
 
 @Entity('guest')
 export class GuestEntity {
@@ -38,4 +39,7 @@ export class GuestEntity {
 
   @OneToMany(() => WakeUpEntity, wakeUp => wakeUp.guest)
   wakeUps!: WakeUpEntity[];
+
+  @OneToMany(() => RequestEntity, request => request.guest)
+  request!: RequestEntity[];
 }
