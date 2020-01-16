@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ZoneRequest } from '../core/models/zone-request';
 import { ZoneEntity } from '../core/entity';
 import { HotelService } from '../core/services/hotel/hotel.service';
@@ -58,7 +58,7 @@ export class HotelController {
   }
 
   @Get(':id/wake')
-  getWake(@Param('id') id: string) {
-    return this.wakeService.getWakeByHotel(id);
+  getWake(@Param('id') id: string, @Query('complete') complete: string) {
+    return this.wakeService.getWakeByHotel(id, complete ? complete === 'true' : null);
   }
 }

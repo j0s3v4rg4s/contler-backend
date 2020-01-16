@@ -45,13 +45,29 @@ export class WakeUpService {
     return this.wakeUpRepository.findOne({ where: { id }, relations: ['room', 'guest'] });
   }
 
-  async getWakeByHotel(id: string) {
+  async getWakeByHotel(id: string, complete?: boolean) {
     const hotel = await this.hotelService.getHotel(id);
-    return this.wakeUpRepository.find({ where: { hotel }, relations: ['room', 'guest'] });
+    if (complete !== null) {
+      return this.wakeUpRepository.find({
+        where: { hotel, complete },
+        relations: ['room', 'guest'],
+        order: { competeDate: 'ASC' },
+      });
+    } else {
+      return this.wakeUpRepository.find({
+        where: { hotel },
+        relations: ['room', 'guest'],
+        order: { competeDate: 'ASC' },
+      });
+    }
   }
 
   async getWakeByGuest(id: string) {
     const guest = await this.guestService.getGuest(id);
     return this.wakeUpRepository.find({ where: { guest }, relations: ['room', 'guest'] });
+  }
+
+  completeWake(id: number) {
+    return this.wakeUpRepository.update({ id }, { complete: true });
   }
 }

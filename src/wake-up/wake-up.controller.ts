@@ -26,4 +26,9 @@ export class WakeUpController {
   getWake(@Param('id') id: number) {
     return this.wakeService.getWake(id);
   }
+
+  @Put('complete')
+  completeWake(@Body('id') id: number) {
+    return this.wakeService.completeWake(id);
+  }
 }

@@ -20,6 +20,9 @@ export class WakeUpEntity {
   @Column()
   name!: string;
 
+  @Column({ default: false })
+  complete: boolean;
+
   @ManyToOne(() => HotelEntity, hotel => hotel.wakeUps)
   hotel!: HotelEntity;
 

@@ -38,7 +38,7 @@ export class EmployerService {
   }
 
   getEmployer(uid: string) {
-    return this.employerRepository.findOne({ uid }, { relations: ['hotel'] });
+    return this.employerRepository.findOne({ uid }, { relations: ['hotel', 'leaderZones'] });
   }
 
   async getEmployees(idHotel: string) {
