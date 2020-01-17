@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { AdminRequest } from '../core/models/admin-request';
 import { EmployerService } from '../core/services/employer/employer.service';
 import { EmployerRequest } from '../core/models/employer-request';
@@ -20,6 +20,11 @@ export class EmployerController {
   @Get(':id')
   getEmployer(@Param('id') id: string) {
     return this.employerService.getEmployer(id);
+  }
+
+  @Get(':id/request')
+  getRequestEmployer(@Param('id') id: string, @Query('complete') complete: string) {
+    return this.employerService.getLeaderRequests(id, complete === 't');
   }
 
   @Delete(':id')

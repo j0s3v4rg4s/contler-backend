@@ -24,17 +24,27 @@ export class RequestService {
     return this.requestRepository.findOne({ id });
   }
 
-  updateAttend(idGuest: string, idRequest: number) {
-    return getConnection().transaction(async entityManager => {
-      const employer = await entityManager.findOne(EmployerEntity, idGuest);
-      await entityManager.update(RequestEntity, { id: idRequest }, { attended: employer });
-    });
-  }
-
-  async updateSolved(idGuest: string, idRequest: number) {
-    return getConnection().transaction(async entityManager => {
-      const employer = await entityManager.findOne(EmployerEntity, idGuest);
-      await entityManager.update(RequestEntity, { id: idRequest }, { solved: employer });
+  async update(request: RequestEntity) {
+    return getConnection().transaction('REPEATABLE READ', async entityManager => {
+      const req = await entityManager.findOne(RequestEntity, request.id, { relations: ['attended', 'solved'] });
+      req.attended = request.attended;
+      req.solved = request.solved;
+      if (request.complete && !req.complete) {
+        req.finishAt = new Date();
+        req.complete = true;
+        const timeComplete = (req.finishAt.getTime() - req.createAt.getTime() ) / 1000 / 60;
+        const employer = await entityManager.findOne(EmployerEntity, request.solved.uid);
+        if (employer.totalServices) {
+          employer.totalServices++;
+          employer.averageTime = Number(timeComplete.toFixed(2));
+        } else {
+          const sumTime = employer.averageTime * employer.totalServices + timeComplete;
+          employer.totalServices++;
+          employer.averageTime = Number((sumTime / employer.totalServices).toFixed(2));
+        }
+        await entityManager.save(employer);
+      }
+      await entityManager.save(req);
     });
   }
 

@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { RequestService } from '../core/services/request/request.service';
 import { RequestRequest } from '../core/models/request-request';
+import { RequestEntity } from '../core/entity';
 
 @Controller('request')
 export class RequestController {
@@ -12,7 +13,12 @@ export class RequestController {
   }
 
   @Post()
-  create(@Body() request: RequestRequest) {
+  createRequest(@Body() request: RequestRequest) {
     return this.requestService.create(request);
+  }
+
+  @Put()
+  updateRequest(@Body() request: RequestEntity) {
+    return this.requestService.update(request);
   }
 }

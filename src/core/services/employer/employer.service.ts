@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EmployerEntity } from '../../entity';
-import { Repository } from 'typeorm';
+import { EmployerEntity, RequestEntity, ZoneEntity } from '../../entity';
+import { getConnection, Repository } from 'typeorm';
 import { AdminRequest } from '../../models/admin-request';
 import { ADMIN, Roles } from '../../const/roles';
 import { EmployerRequest } from '../../models/employer-request';
@@ -63,5 +63,18 @@ export class EmployerService {
     employer.role = role;
     employer.lastName = '';
     return employer;
+  }
+
+  async getLeaderRequests(idEmployer: string, complete: boolean) {
+    return getConnection()
+      .createQueryBuilder(RequestEntity, 'req')
+      .leftJoinAndSelect('req.guest', 'guest')
+      .leftJoinAndSelect('req.zone', 'zone')
+      .leftJoinAndSelect('req.room', 'room')
+      .leftJoinAndSelect('req.solved', 'solved')
+      .innerJoin('req.zone', 'zonet')
+      .innerJoin('zonet.leaders', 'leader', 'leader.uid = :id', { id: idEmployer })
+      .where('req.complete = :complete', { complete })
+      .getMany();
   }
 }

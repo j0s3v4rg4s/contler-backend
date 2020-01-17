@@ -20,11 +20,14 @@ export class EmployerEntity {
   @Column({ default: 0 })
   totalScore!: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0 , type: 'decimal'})
   averageScore!: number;
 
   @Column({ default: 0 })
   totalServices!: number;
+
+  @Column({ default: 0 , type: 'decimal'})
+  averageTime!: number;
 
   @Column({ default: 0, type: 'numeric' })
   totalTime!: number;

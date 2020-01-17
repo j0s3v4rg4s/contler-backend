@@ -52,6 +52,11 @@ export class HotelController {
     return this.roomService.createRoom(name, id);
   }
 
+  @Get(':id/room')
+  getRooms(@Param('id') id: string) {
+    return this.roomService.getRooms(id);
+  }
+
   @Get(':id/guest')
   getGuest(@Param('id') id: string) {
     return this.guestService.getGuestByHotel(id);
