@@ -21,4 +21,9 @@ export class RequestController {
   updateRequest(@Body() request: RequestEntity) {
     return this.requestService.update(request);
   }
+
+  @Put('qualify')
+  qualifyRequest(@Body() request: RequestEntity) {
+    return this.requestService.qualify(request);
+  }
 }

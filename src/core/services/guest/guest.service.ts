@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GuestEntity } from '../../entity/guest.entity';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { GuestRequest } from '../../models/guest-request';
 import { UserService } from '../user/user.service';
 import { GUEST } from '../../const/roles';
 import { HotelService } from '../hotel/hotel.service';
+import { RequestEntity } from '../../entity';
 
 @Injectable()
 export class GuestService {
@@ -45,6 +46,13 @@ export class GuestService {
 
   getGuest(id: string) {
     return this.guestRepository.findOne({ where: { uid: id }, relations: ['hotel', 'hotel.zones', 'room'] });
+  }
+
+  async getRequest(id: string, complete: boolean) {
+    const guest = await this.guestRepository.findOne(id);
+    return getConnection()
+      .getRepository(RequestEntity)
+      .find({ where: {guest, complete}, relations: ['zone'] } );
   }
 
   async getGuestByHotel(idHotel) {

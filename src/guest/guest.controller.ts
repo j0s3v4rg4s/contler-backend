@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { GuestService } from '../core/services/guest/guest.service';
 import { GuestRequest } from '../core/models/guest-request';
 import { GuestEntity } from '../core/entity/guest.entity';
@@ -26,6 +26,11 @@ export class GuestController {
   @Get(':id')
   getGuest(@Param('id') id: string) {
     return this.guestService.getGuest(id);
+  }
+
+  @Get(':id/request')
+  getGuestRequest(@Param('id') id: string, @Query('complete') complete: string) {
+    return this.guestService.getRequest(id, complete === 't');
   }
 
   @Get(':id/wake-up')

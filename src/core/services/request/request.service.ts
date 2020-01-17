@@ -48,19 +48,19 @@ export class RequestService {
     });
   }
 
-  qualify(id: number, score: number, comment?: string) {
+  qualify(req: RequestEntity) {
     return getConnection().transaction('REPEATABLE READ', async entityManager => {
-      const request = await entityManager.findOne(RequestEntity, id, { relations: ['solved'] });
-      request.score = score;
-      request.comment = comment;
+      const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved'] });
+      request.score = req.score;
+      request.comment = req.comment;
       const employer = await entityManager.findOne(EmployerEntity, request.solved.uid);
       if (employer.totalScore === 0) {
         employer.totalScore++;
-        employer.averageScore = score;
+        employer.averageScore = req.score;
       } else {
-        const sumScore = employer.averageScore * employer.totalScore + score;
+        const sumScore = employer.averageScore * employer.totalScore + req.score;
         employer.totalScore++;
-        employer.averageScore = sumScore / employer.totalScore;
+        employer.averageScore = Number((sumScore / employer.totalScore).toFixed(2));
       }
       await entityManager.save(request);
       await entityManager.save(employer);
