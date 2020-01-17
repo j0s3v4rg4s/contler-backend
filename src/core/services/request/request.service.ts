@@ -25,7 +25,7 @@ export class RequestService {
   }
 
   async update(request: RequestEntity) {
-    return getConnection().transaction('REPEATABLE READ', async entityManager => {
+    return getConnection().transaction('READ COMMITTED', async entityManager => {
       const req = await entityManager.findOne(RequestEntity, request.id, { relations: ['attended', 'solved'] });
       req.attended = request.attended;
       req.solved = request.solved;
@@ -49,7 +49,7 @@ export class RequestService {
   }
 
   qualify(req: RequestEntity) {
-    return getConnection().transaction('REPEATABLE READ', async entityManager => {
+    return getConnection().transaction('READ COMMITTED', async entityManager => {
       const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved'] });
       request.score = req.score;
       request.comment = req.comment;

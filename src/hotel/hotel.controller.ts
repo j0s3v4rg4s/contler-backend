@@ -66,4 +66,14 @@ export class HotelController {
   getWake(@Param('id') id: string, @Query('complete') complete: string) {
     return this.wakeService.getWakeByHotel(id, complete ? complete === 'true' : null);
   }
+
+  @Get(':id/score')
+  gedScore(@Param('id') id: string) {
+    return this.hotelService.getScoreStatistic(id);
+  }
+
+  @Get(':id/time')
+  gedTime(@Param('id') id: string) {
+    return this.hotelService.getTimeStatistic(id);
+  }
 }

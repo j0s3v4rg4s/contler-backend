@@ -25,6 +25,7 @@ dotenv.config({
       },
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      // logging: true,
     }),
     HotelModule,
     EmployerModule,

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HotelEntity, ZoneEntity } from '../../entity';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ZoneRequest } from '../../models/zone-request';
 import { CategoryEntity } from '../../entity/category.entity';
@@ -58,5 +58,23 @@ export class HotelService {
       throw new HttpException('Esta zona tiene lideres asociados', HttpStatus.BAD_REQUEST);
     }
     return this.zoneRepository.delete({ uid: zoneId });
+  }
+
+  getScoreStatistic(hotelId) {
+    return getConnection()
+      .createEntityManager()
+      .query('select avg(score), count(*) from request where request.score notnull and request."hotelUid" = $1', [
+        hotelId,
+      ]);
+  }
+
+  getTimeStatistic(hotelId) {
+    return getConnection()
+      .createEntityManager()
+      .query(
+        'select EXTRACT(epoch FROM avg("finishAt" - "createAt"))/60 as avg , count(*) as count ' +
+        'from request where request."finishAt"  notnull and request."hotelUid" =  $1;',
+        [hotelId],
+      );
   }
 }
