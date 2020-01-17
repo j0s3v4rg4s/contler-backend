@@ -21,7 +21,7 @@ export class RequestService {
   }
 
   getRequest(id: number) {
-    return this.requestRepository.findOne({ id });
+    return this.requestRepository.findOne({ id }, {relations: ['zone', 'solved']});
   }
 
   async update(request: RequestEntity) {
