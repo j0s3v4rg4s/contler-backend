@@ -16,20 +16,13 @@ export class WakeUpService {
 
   create(request: WakeRequest) {
     const wake = this.wakeUpRepository.create();
-    const totalTime = new Date(request.date);
-    const time = new Date(request.time);
-    totalTime.setHours(time.getHours());
-    totalTime.setMinutes(time.getMinutes());
-    totalTime.setSeconds(time.getMinutes());
-    totalTime.setMilliseconds(time.getMilliseconds());
-
     wake.guest = request.guest;
     wake.room = request.room;
     wake.date = request.date;
     wake.hotel = request.hotel;
     wake.name = request.name;
     wake.time = request.time;
-    wake.competeDate = totalTime;
+    wake.competeDate = request.totalTime;
     return this.wakeUpRepository.save(wake);
   }
 
@@ -64,7 +57,11 @@ export class WakeUpService {
 
   async getWakeByGuest(id: string) {
     const guest = await this.guestService.getGuest(id);
-    return this.wakeUpRepository.find({ where: { guest }, relations: ['room', 'guest'], order: {competeDate: 'ASC'} });
+    return this.wakeUpRepository.find({
+      where: { guest },
+      relations: ['room', 'guest'],
+      order: { competeDate: 'ASC' },
+    });
   }
 
   completeWake(id: number) {

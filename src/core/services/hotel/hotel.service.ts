@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { HotelEntity, ZoneEntity } from '../../entity';
+import { HotelEntity, RequestEntity, ZoneEntity } from '../../entity';
 import { getConnection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ZoneRequest } from '../../models/zone-request';
@@ -49,7 +49,7 @@ export class HotelService {
   }
 
   updateZone(zone: ZoneEntity) {
-    return this.zoneRepository.update({ uid: zone.uid }, zone);
+    return this.zoneRepository.save(zone);
   }
 
   async deleteZone(zoneId: string) {
@@ -68,13 +68,13 @@ export class HotelService {
       ]);
   }
 
-  getTimeStatistic(hotelId) {
-    return getConnection()
-      .createEntityManager()
-      .query(
-        'select EXTRACT(epoch FROM avg("finishAt" - "createAt"))/60 as avg , count(*) as count ' +
-        'from request where request."finishAt"  notnull and request."hotelUid" =  $1;',
-        [hotelId],
-      );
+  async getTimeStatistic(hotelId) {
+    const data = await getConnection()
+      .createQueryBuilder(RequestEntity, 'request')
+      .select('avg("finishAt" - "createAt")', 'avg')
+      .where('request."finishAt"  notnull')
+      .andWhere('request."hotelUid" =  :id', {id: hotelId})
+      .getRawOne();
+    return data.avg;
   }
 }

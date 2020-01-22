@@ -26,8 +26,8 @@ export class EmployerEntity {
   @Column({ default: 0 })
   totalServices!: number;
 
-  @Column({ default: 0 , type: 'decimal'})
-  averageTime!: number;
+  @Column({ type: 'interval', nullable: true})
+  averageTime!: any ;
 
   @Column({ default: 0, type: 'numeric' })
   totalTime!: number;

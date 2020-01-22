@@ -19,7 +19,7 @@ dotenv.config({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DB,
+      url: process.env.DATABASE_URL,
       extra: {
         ssl: true,
       },

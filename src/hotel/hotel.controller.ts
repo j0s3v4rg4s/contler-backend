@@ -6,6 +6,7 @@ import { EmployerService } from '../core/services/employer/employer.service';
 import { RoomService } from '../core/services/room/room.service';
 import { GuestService } from '../core/services/guest/guest.service';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
+import { RequestService } from '../core/services/request/request.service';
 
 @Controller('hotel')
 export class HotelController {
@@ -15,6 +16,7 @@ export class HotelController {
     private roomService: RoomService,
     private guestService: GuestService,
     private wakeService: WakeUpService,
+    private requestService: RequestService,
   ) {}
 
   @Get('category')
@@ -75,5 +77,10 @@ export class HotelController {
   @Get(':id/time')
   gedTime(@Param('id') id: string) {
     return this.hotelService.getTimeStatistic(id);
+  }
+
+  @Get(':id/request')
+  gedRequest(@Param('id') id: string) {
+    return this.requestService.getRequestByHotel(id);
   }
 }

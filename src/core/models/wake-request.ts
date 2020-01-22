@@ -1,5 +1,5 @@
 import { HotelEntity, RoomEntity } from '../entity';
-import { GuestEntity } from '../entity/guest.entity';
+import { GuestEntity } from '../entity';
 import { IsNotEmpty } from 'class-validator';
 
 export class WakeRequest {
@@ -8,6 +8,9 @@ export class WakeRequest {
 
   @IsNotEmpty()
   time!: Date;
+
+  @IsNotEmpty()
+  totalTime!: Date;
 
   @IsNotEmpty()
   name!: string;

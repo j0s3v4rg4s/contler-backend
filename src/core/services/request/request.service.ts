@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EmployerEntity, RequestEntity, ZoneEntity } from '../../entity';
+import { EmployerEntity, HotelEntity, RequestEntity } from '../../entity';
 import { getConnection, Repository } from 'typeorm';
 import { RequestRequest } from '../../models/request-request';
 
@@ -21,31 +21,27 @@ export class RequestService {
   }
 
   getRequest(id: number) {
-    return this.requestRepository.findOne({ id }, {relations: ['zone', 'solved']});
+    return this.requestRepository.findOne({ id }, { relations: ['zone', 'solved'] });
   }
 
   async update(request: RequestEntity) {
-    return getConnection().transaction('READ COMMITTED', async entityManager => {
-      const req = await entityManager.findOne(RequestEntity, request.id, { relations: ['attended', 'solved'] });
-      req.attended = request.attended;
-      req.solved = request.solved;
-      if (request.complete && !req.complete) {
-        req.finishAt = new Date();
-        req.complete = true;
-        const timeComplete = (req.finishAt.getTime() - req.createAt.getTime() ) / 1000 / 60;
-        const employer = await entityManager.findOne(EmployerEntity, request.solved.uid);
-        if (employer.totalServices) {
-          employer.totalServices++;
-          employer.averageTime = Number(timeComplete.toFixed(2));
-        } else {
-          const sumTime = employer.averageTime * employer.totalServices + timeComplete;
-          employer.totalServices++;
-          employer.averageTime = Number((sumTime / employer.totalServices).toFixed(2));
-        }
+    await this.requestRepository.save(request);
+    if (request.complete) {
+      await getConnection().transaction('READ UNCOMMITTED', async entityManager => {
+        const timeAverage = await entityManager
+          .createQueryBuilder(RequestEntity, 'request')
+          .select('avg("finishAt" - "createAt")', 'avg')
+          .addSelect('count(*)', 'count')
+          .where('request.complete = true')
+          .andWhere('request."solvedUid" = :id', { id: request.solved.uid })
+          .getRawOne();
+        const employer = await entityManager.findOne(EmployerEntity, { uid: request.solved.uid });
+        employer.averageTime = timeAverage.avg;
+        employer.totalTime = timeAverage.count;
+        employer.totalServices = timeAverage.count;
         await entityManager.save(employer);
-      }
-      await entityManager.save(req);
-    });
+      });
+    }
   }
 
   qualify(req: RequestEntity) {
@@ -65,5 +61,12 @@ export class RequestService {
       await entityManager.save(request);
       await entityManager.save(employer);
     });
+  }
+
+  async getRequestByHotel(hotelId: string) {
+    const hotel = await getConnection()
+      .getRepository(HotelEntity)
+      .findOne({ where: { uid: hotelId } });
+    return this.requestRepository.find({ where: { hotel }, relations: ['guest', 'room', 'zone', 'solved'] });
   }
 }
