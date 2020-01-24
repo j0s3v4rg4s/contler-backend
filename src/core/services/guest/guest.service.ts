@@ -52,7 +52,7 @@ export class GuestService {
     const guest = await this.guestRepository.findOne(id);
     return getConnection()
       .getRepository(RequestEntity)
-      .find({ where: {guest, complete}, relations: ['zone'] } );
+      .find({ where: {guest, complete, special: false}, relations: ['zone'] } );
   }
 
   async getGuestByHotel(idHotel) {

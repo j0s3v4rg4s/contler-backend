@@ -25,27 +25,15 @@ export class RequestService {
   }
 
   async update(request: RequestEntity) {
-    await this.requestRepository.save(request);
-    if (request.complete) {
-      await getConnection().transaction('READ UNCOMMITTED', async entityManager => {
-        const timeAverage = await entityManager
-          .createQueryBuilder(RequestEntity, 'request')
-          .select('avg("finishAt" - "createAt")', 'avg')
-          .addSelect('count(*)', 'count')
-          .where('request.complete = true')
-          .andWhere('request."solvedUid" = :id', { id: request.solved.uid })
-          .getRawOne();
-        const employer = await entityManager.findOne(EmployerEntity, { uid: request.solved.uid });
-        employer.averageTime = timeAverage.avg;
-        employer.totalTime = timeAverage.count;
-        employer.totalServices = timeAverage.count;
-        await entityManager.save(employer);
-      });
+    const req = await this.requestRepository.findOne(request.id);
+    if (request.complete && !req.complete) {
+      request.finishAt = new Date();
     }
+    return this.requestRepository.save(request);
   }
 
   qualify(req: RequestEntity) {
-    return getConnection().transaction('READ COMMITTED', async entityManager => {
+    return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
       const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved'] });
       request.score = req.score;
       request.comment = req.comment;
@@ -67,6 +55,46 @@ export class RequestService {
     const hotel = await getConnection()
       .getRepository(HotelEntity)
       .findOne({ where: { uid: hotelId } });
-    return this.requestRepository.find({ where: { hotel }, relations: ['guest', 'room', 'zone', 'solved'] });
+    return this.requestRepository.find({
+      where: { hotel, special: false },
+      relations: ['guest', 'room', 'zone', 'solved'],
+    });
+  }
+
+  async getSpecialRequestByHotel(hotelId: string, complete?: boolean) {
+    const hotel = await getConnection()
+      .getRepository(HotelEntity)
+      .findOne({ where: { uid: hotelId } });
+    if (complete !== undefined) {
+      return this.requestRepository.find({
+        where: { hotel, complete, special: true },
+        relations: ['guest', 'room', 'zone', 'solved'],
+      });
+    } else {
+      return this.requestRepository.find({
+        where: { hotel, special: true },
+        relations: ['guest', 'room', 'zone', 'solved'],
+      });
+    }
+  }
+
+  calculateAverageTime(id: number) {
+    return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
+      const request = await entityManager.findOne(RequestEntity, id);
+      if (request.complete) {
+        const timeAverage = await entityManager
+          .createQueryBuilder(RequestEntity, 'request')
+          .select('avg("finishAt" - "createAt")', 'avg')
+          .addSelect('count(*)', 'count')
+          .where('request.complete = true')
+          .andWhere('request."solvedUid" = :id', { id: request.solved.uid })
+          .getRawOne();
+        const employer = await entityManager.findOne(EmployerEntity, { uid: request.solved.uid });
+        employer.averageTime = timeAverage.avg;
+        employer.totalTime = timeAverage.count;
+        employer.totalServices = timeAverage.count;
+        await entityManager.save(employer);
+      }
+    });
   }
 }

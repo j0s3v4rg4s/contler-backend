@@ -18,12 +18,21 @@ export class RequestController {
   }
 
   @Put()
-  updateRequest(@Body() request: RequestEntity) {
+  async updateRequest(@Body() request: RequestEntity) {
+    if (request.complete && !request.finishAt) {
+      await this.requestService.update(request);
+      return this.requestService.calculateAverageTime(request.id);
+    }
     return this.requestService.update(request);
   }
 
   @Put('qualify')
   qualifyRequest(@Body() request: RequestEntity) {
     return this.requestService.qualify(request);
+  }
+
+  @Get(':id/average-time')
+  calculateAverageTime(@Param('id') id: number) {
+    return this.requestService.calculateAverageTime(id);
   }
 }

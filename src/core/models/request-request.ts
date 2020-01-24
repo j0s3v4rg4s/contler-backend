@@ -8,7 +8,6 @@ export class RequestRequest {
   @IsNotEmpty()
   special!: boolean;
 
-  @IsNotEmpty()
   zone!: ZoneEntity;
 
   @IsNotEmpty()

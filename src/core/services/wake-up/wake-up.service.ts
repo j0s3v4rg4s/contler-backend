@@ -26,7 +26,7 @@ export class WakeUpService {
     return this.wakeUpRepository.save(wake);
   }
 
-  update(wake: WakeRequest) {
+  update(wake: WakeUpEntity) {
     return this.wakeUpRepository.save(wake);
   }
 

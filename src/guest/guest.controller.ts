@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { GuestService } from '../core/services/guest/guest.service';
 import { GuestRequest } from '../core/models/guest-request';
-import { GuestEntity } from '../core/entity/guest.entity';
+import { GuestEntity } from '../core/entity';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 
 @Controller('guest')

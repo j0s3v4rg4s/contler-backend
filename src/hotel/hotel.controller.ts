@@ -83,4 +83,11 @@ export class HotelController {
   gedRequest(@Param('id') id: string) {
     return this.requestService.getRequestByHotel(id);
   }
+
+  @Get(':id/special-request')
+  getSpecialRequest(@Param('id') id: string, @Query('complete') complete: string) {
+    return !!complete
+      ? this.requestService.getSpecialRequestByHotel(id, complete === 't')
+      : this.requestService.getSpecialRequestByHotel(id);
+  }
 }
