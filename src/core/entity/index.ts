@@ -6,6 +6,8 @@ import { RoomEntity } from './room.entity';
 import { GuestEntity } from './guest.entity';
 import { WakeUpEntity } from './wake-up.entity';
 import { RequestEntity } from './request.entity';
+import { ZoneReserveEntity } from './zone-reserve.entity';
+import { ScheduleEntity } from './schedule.entity';
 
 export * from './hotel.entity';
 export * from './employer.entity';
@@ -14,6 +16,8 @@ export * from './room.entity';
 export * from './wake-up.entity';
 export * from './request.entity';
 export * from './guest.entity';
+export * from './zone-reserve.entity';
+export * from './schedule.entity';
 
 export const entities = [
   HotelEntity,
@@ -24,4 +28,6 @@ export const entities = [
   GuestEntity,
   WakeUpEntity,
   RequestEntity,
+  ZoneReserveEntity,
+  ScheduleEntity,
 ];

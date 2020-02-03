@@ -1,10 +1,11 @@
-import { Column, Entity, Generated, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Generated, OneToMany, PrimaryColumn } from 'typeorm';
 import { EmployerEntity } from './employer.entity';
 import { ZoneEntity } from './zone.entity';
 import { RoomEntity } from './room.entity';
 import { GuestEntity } from './guest.entity';
 import { WakeUpEntity } from './wake-up.entity';
 import { RequestEntity } from './request.entity';
+import { ZoneReserveEntity } from './zone-reserve.entity';
 
 @Entity({ name: 'hotel' })
 export class HotelEntity {
@@ -26,6 +27,9 @@ export class HotelEntity {
 
   @OneToMany(() => ZoneEntity, zone => zone.hotel)
   zones!: ZoneEntity[];
+
+  @OneToMany(() => ZoneReserveEntity, reservation => reservation.hotel)
+  zonesReservation!: ZoneReserveEntity[];
 
   @OneToMany(() => RoomEntity, room => room.hotel)
   rooms!: RoomEntity[];

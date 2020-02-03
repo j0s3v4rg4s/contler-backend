@@ -8,6 +8,7 @@ import { RoomModule } from './room/room.module';
 import { GuestModule } from './guest/guest.module';
 import { WakeUpModule } from './wake-up/wake-up.module';
 import { RequestModule } from './request/request.module';
+import { ReservationModule } from './reservation/reservation.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -33,6 +34,7 @@ dotenv.config({
     GuestModule,
     WakeUpModule,
     RequestModule,
+    ReservationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

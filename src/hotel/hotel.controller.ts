@@ -7,6 +7,7 @@ import { RoomService } from '../core/services/room/room.service';
 import { GuestService } from '../core/services/guest/guest.service';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 import { RequestService } from '../core/services/request/request.service';
+import { ReservationService } from '../core/services/reservation/reservation.service';
 
 @Controller('hotel')
 export class HotelController {
@@ -17,6 +18,7 @@ export class HotelController {
     private guestService: GuestService,
     private wakeService: WakeUpService,
     private requestService: RequestService,
+    private reservationService: ReservationService,
   ) {}
 
   @Get('category')
@@ -89,5 +91,10 @@ export class HotelController {
     return !!complete
       ? this.requestService.getSpecialRequestByHotel(id, complete === 't')
       : this.requestService.getSpecialRequestByHotel(id);
+  }
+
+  @Get(':id/reservation')
+  getZoneReservations(@Param('id') id: string) {
+    return this.reservationService.getReservationsByHotel(id);
   }
 }
