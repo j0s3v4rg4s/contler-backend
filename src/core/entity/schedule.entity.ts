@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ZoneReserveEntity } from './zone-reserve.entity';
+import { BookingEntity } from './booking.entity';
 
 @Entity('schedule')
 export class ScheduleEntity {
@@ -23,4 +24,7 @@ export class ScheduleEntity {
 
   @ManyToOne(() => ZoneReserveEntity, zone => zone.schedule)
   reservation: ZoneReserveEntity;
+
+  @OneToMany(() => BookingEntity, booking => booking.schedule)
+  booking!: BookingEntity[];
 }

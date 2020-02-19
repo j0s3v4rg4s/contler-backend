@@ -3,10 +3,15 @@ import { GuestService } from '../core/services/guest/guest.service';
 import { GuestRequest } from '../core/models/guest-request';
 import { GuestEntity } from '../core/entity';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
+import { ReservationService } from '../core/services/reservation/reservation.service';
 
 @Controller('guest')
 export class GuestController {
-  constructor(private guestService: GuestService, private wakeService: WakeUpService) {}
+  constructor(
+    private guestService: GuestService,
+    private wakeService: WakeUpService,
+    private reservationService: ReservationService,
+  ) {}
 
   @Post()
   createGuest(@Body() request: GuestRequest) {
@@ -36,5 +41,10 @@ export class GuestController {
   @Get(':id/wake-up')
   getWakeUp(@Param('id') id: string) {
     return this.wakeService.getWakeByGuest(id);
+  }
+
+  @Get(':id/reservation')
+  getReservation(@Param('id') id: string) {
+    return this.reservationService.getBookingByGuest(id);
   }
 }

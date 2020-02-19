@@ -1,0 +1,30 @@
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { GuestEntity } from './guest.entity';
+import { ScheduleEntity } from './schedule.entity';
+
+@Entity('booking')
+export class BookingEntity {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  date!: Date;
+
+  @Column()
+  quote!: number;
+
+  @Column()
+  name!: string;
+
+  @Column({nullable: true})
+  description!: string;
+
+  @Column()
+  active!: boolean;
+
+  @ManyToOne(() => GuestEntity, guest => guest.booking)
+  guest!: GuestEntity;
+
+  @ManyToOne(() => ScheduleEntity, schedule => schedule.booking)
+  schedule!: ScheduleEntity;
+}

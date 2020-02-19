@@ -3,6 +3,7 @@ import { HotelEntity } from './hotel.entity';
 import { RoomEntity } from './room.entity';
 import { WakeUpEntity } from './wake-up.entity';
 import { RequestEntity } from './request.entity';
+import { BookingEntity } from './booking.entity';
 
 @Entity('guest')
 export class GuestEntity {
@@ -42,4 +43,7 @@ export class GuestEntity {
 
   @OneToMany(() => RequestEntity, request => request.guest)
   request!: RequestEntity[];
+
+  @OneToMany(() => BookingEntity, booking => booking.guest)
+  booking!: BookingEntity[];
 }
