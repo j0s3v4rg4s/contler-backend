@@ -19,8 +19,11 @@ export class BookingEntity {
   @Column({nullable: true})
   description!: string;
 
-  @Column()
+  @Column({default: true})
   active!: boolean;
+
+  @Column({default: false})
+  complete!: boolean;
 
   @ManyToOne(() => GuestEntity, guest => guest.booking)
   guest!: GuestEntity;

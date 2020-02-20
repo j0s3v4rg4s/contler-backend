@@ -57,4 +57,9 @@ export class ReservationController {
   updateBooking(@Body() booking: BookingEntity) {
     return this.reservationsService.updateBooking(booking);
   }
+
+  @Post('booking/cancel')
+  cancelBooking(@Body() booking: BookingEntity) {
+    return this.reservationsService.cancelBooking(booking);
+  }
 }

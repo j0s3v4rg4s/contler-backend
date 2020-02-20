@@ -106,6 +106,10 @@ export class ReservationService {
     });
   }
 
+  cancelBooking(booking: BookingEntity) {
+    return this.bookingRepository.update(booking.id, { active: false });
+  }
+
   async getBookingByGuest(id: string) {
     const guest = await getConnection()
       .getRepository(GuestEntity)
