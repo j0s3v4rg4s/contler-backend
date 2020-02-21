@@ -97,4 +97,9 @@ export class HotelController {
   getZoneReservations(@Param('id') id: string) {
     return this.reservationService.getReservationsByHotel(id);
   }
+
+  @Get(':id/booking')
+  getBooking(@Param('id') id: string) {
+    return this.reservationService.getBookingByHotel(id);
+  }
 }

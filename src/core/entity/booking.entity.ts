@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { GuestEntity } from './guest.entity';
 import { ScheduleEntity } from './schedule.entity';
+import { HotelEntity } from './hotel.entity';
 
 @Entity('booking')
 export class BookingEntity {
@@ -16,13 +17,13 @@ export class BookingEntity {
   @Column()
   name!: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   description!: string;
 
-  @Column({default: true})
+  @Column({ default: true })
   active!: boolean;
 
-  @Column({default: false})
+  @Column({ default: false })
   complete!: boolean;
 
   @ManyToOne(() => GuestEntity, guest => guest.booking)
@@ -30,4 +31,7 @@ export class BookingEntity {
 
   @ManyToOne(() => ScheduleEntity, schedule => schedule.booking)
   schedule!: ScheduleEntity;
+
+  @ManyToOne(() => HotelEntity, hotel => hotel.booking)
+  hotel: HotelEntity;
 }
