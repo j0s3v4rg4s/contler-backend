@@ -20,6 +20,9 @@ export class HotelEntity {
   @Column({ nullable: true })
   color!: string;
 
+  @Column({ nullable: true })
+  colorSecond!: string;
+
   @Column()
   logo!: string;
 
