@@ -66,7 +66,7 @@ export class ReservationService {
     return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
       const schedule = await entityManager.findOne(ScheduleEntity, {
         where: { id: idSchedule },
-        relations: ['reservation.hotel'],
+        relations: ['reservation', 'reservation.hotel'],
       });
       const { total } = await entityManager
         .createQueryBuilder(BookingEntity, 'booking')
@@ -139,5 +139,9 @@ export class ReservationService {
       where: { id },
       relations: ['schedule', 'schedule.reservation', 'schedule.reservation.schedule'],
     });
+  }
+
+  qualifyBooking(idBooking: number, quality: number) {
+    return this.bookingRepository.update(idBooking, {qualification: quality});
   }
 }

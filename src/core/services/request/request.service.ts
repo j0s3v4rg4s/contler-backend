@@ -80,7 +80,7 @@ export class RequestService {
 
   calculateAverageTime(id: number) {
     return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
-      const request = await entityManager.findOne(RequestEntity, id);
+      const request = await entityManager.findOne(RequestEntity, {where: {id}, relations: ['solved']});
       if (request.complete) {
         const timeAverage = await entityManager
           .createQueryBuilder(RequestEntity, 'request')

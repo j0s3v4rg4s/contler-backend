@@ -67,4 +67,9 @@ export class ReservationController {
   completeBooking(@Body() booking: BookingEntity) {
     return this.reservationsService.completeBooking(booking);
   }
+
+  @Post('booking/:id/qualify')
+  qualifyBooking(@Param('id') id: number, @Body('qualify') qualify: number) {
+    return this.reservationsService.qualifyBooking(id, qualify);
+  }
 }
