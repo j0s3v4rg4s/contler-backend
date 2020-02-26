@@ -22,7 +22,7 @@ export class RequestService {
   }
 
   getRequest(id: number) {
-    return this.requestRepository.findOne({ id }, { relations: ['zone', 'solved'] });
+    return this.requestRepository.findOne({ id }, { relations: ['guest', 'room', 'zone', 'solved'] });
   }
 
   async update(request: RequestEntity) {
