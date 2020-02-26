@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EmployerEntity, HotelEntity, RequestEntity } from '../../entity';
 import { getConnection, Repository } from 'typeorm';
 import { RequestRequest } from '../../models/request-request';
+import { database } from 'firebase-admin';
 
 @Injectable()
 export class RequestService {
@@ -34,7 +35,7 @@ export class RequestService {
 
   qualify(req: RequestEntity) {
     return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
-      const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved'] });
+      const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved', 'guest', 'zone'] });
       request.score = req.score;
       request.comment = req.comment;
       const employer = await entityManager.findOne(EmployerEntity, request.solved.uid);
@@ -46,6 +47,20 @@ export class RequestService {
         employer.totalScore++;
         employer.averageScore = Number((sumScore / employer.totalScore).toFixed(2));
       }
+      if (req.score <= 3) {
+        const node = database()
+          .ref('notification')
+          .push();
+        node.set({
+          uid: node.key,
+          requestId: request.id,
+          name: request.guest.name || '',
+          zone: request.zone.name || '',
+          message: request.message || '',
+          view: false,
+        });
+      }
+
       await entityManager.save(request);
       await entityManager.save(employer);
     });
@@ -80,7 +95,7 @@ export class RequestService {
 
   calculateAverageTime(id: number) {
     return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
-      const request = await entityManager.findOne(RequestEntity, {where: {id}, relations: ['solved']});
+      const request = await entityManager.findOne(RequestEntity, { where: { id }, relations: ['solved'] });
       if (request.complete) {
         const timeAverage = await entityManager
           .createQueryBuilder(RequestEntity, 'request')

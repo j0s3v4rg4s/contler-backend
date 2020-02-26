@@ -16,7 +16,7 @@ async function bootstrap() {
   const credentialFirebase = JSON.parse(credentialFireString);
   initializeApp({
     credential: credential.cert(credentialFirebase),
-    databaseURL: 'https://trepsi-prod2.firebaseio.com',
+    databaseURL: process.env.FIREBASE_DB,
   });
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
