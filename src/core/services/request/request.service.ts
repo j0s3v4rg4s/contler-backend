@@ -35,7 +35,7 @@ export class RequestService {
 
   qualify(req: RequestEntity) {
     return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
-      const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved', 'guest', 'zone'] });
+      const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved', 'guest', 'zone', 'hotel'] });
       request.score = req.score;
       request.comment = req.comment;
       const employer = await entityManager.findOne(EmployerEntity, request.solved.uid);
@@ -49,7 +49,7 @@ export class RequestService {
       }
       if (req.score <= 3) {
         const node = database()
-          .ref('notification')
+          .ref('notification').child(request.hotel.uid)
           .push();
         node.set({
           uid: node.key,
