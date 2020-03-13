@@ -81,6 +81,13 @@ export class HotelController {
     return this.hotelService.getTimeStatistic(id);
   }
 
+  @Get(':id/request-admin')
+  getRequestAdmin(@Param('id') id: string, @Query('complete') complete: string, @Query('special') special: string) {
+    const completeTemp = complete === undefined ? null : complete === 't';
+    const specialTemp = special === undefined ? null : special === 't';
+    return this.requestService.getAdminRequest(id, completeTemp, specialTemp);
+  }
+
   @Get(':id/request')
   gedRequest(@Param('id') id: string) {
     return this.requestService.getRequestByHotel(id);

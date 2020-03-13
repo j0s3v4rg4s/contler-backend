@@ -75,6 +75,16 @@ export class EmployerService {
       .innerJoin('req.zone', 'zonet')
       .innerJoin('zonet.leaders', 'leader', 'leader.uid = :id', { id: idEmployer })
       .where('req.complete = :complete', { complete })
+      .andWhere('req.public = false')
       .getMany();
+  }
+
+  async getPublicRequest(idEmployer: string, complete: boolean) {
+    const employerEntity = await this.employerRepository.findOne({ uid: idEmployer }, { relations: ['hotel'] });
+    const reqRepository = getConnection().getRepository(RequestEntity);
+    return reqRepository.find({
+      where: { complete, public: true, hotel: employerEntity.hotel },
+      relations: ['guest', 'zone', 'room', 'solved'],
+    });
   }
 }

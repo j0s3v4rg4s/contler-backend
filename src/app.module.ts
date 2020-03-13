@@ -9,6 +9,7 @@ import { GuestModule } from './guest/guest.module';
 import { WakeUpModule } from './wake-up/wake-up.module';
 import { RequestModule } from './request/request.module';
 import { ReservationModule } from './reservation/reservation.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -35,6 +36,7 @@ dotenv.config({
     WakeUpModule,
     RequestModule,
     ReservationModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

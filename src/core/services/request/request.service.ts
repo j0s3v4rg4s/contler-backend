@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmployerEntity, HotelEntity, RequestEntity } from '../../entity';
 import { getConnection, Repository } from 'typeorm';
 import { RequestRequest } from '../../models/request-request';
 import { database } from 'firebase-admin';
+import { SchedulerRegistry, Timeout } from '@nestjs/schedule';
+import { UserTokes } from '../../models/user-tokes';
 
 @Injectable()
 export class RequestService {
-  constructor(@InjectRepository(RequestEntity) private requestRepository: Repository<RequestEntity>) {}
+  constructor(
+    @InjectRepository(RequestEntity) private requestRepository: Repository<RequestEntity>,
+    private readonly schedulerRegistry: SchedulerRegistry,
+    private http: HttpService,
+  ) {}
 
-  create(request: RequestRequest) {
+  async create(request: RequestRequest) {
     const req = this.requestRepository.create();
     req.message = request.message;
     req.special = request.special;
@@ -18,7 +24,9 @@ export class RequestService {
     req.guest = request.guest;
     req.hotel = request.hotel;
     req.createAt = new Date();
-    return this.requestRepository.save(req);
+    const requestEntity = await this.requestRepository.save(req);
+    this.checkRequestValid(requestEntity);
+    return requestEntity;
   }
 
   getRequest(id: number) {
@@ -35,7 +43,9 @@ export class RequestService {
 
   qualify(req: RequestEntity) {
     return getConnection().transaction('READ UNCOMMITTED', async entityManager => {
-      const request = await entityManager.findOne(RequestEntity, req.id, { relations: ['solved', 'guest', 'zone', 'hotel'] });
+      const request = await entityManager.findOne(RequestEntity, req.id, {
+        relations: ['solved', 'guest', 'zone', 'hotel'],
+      });
       request.score = req.score;
       request.comment = req.comment;
       const employer = await entityManager.findOne(EmployerEntity, request.solved.uid);
@@ -49,7 +59,8 @@ export class RequestService {
       }
       if (req.score <= 3) {
         const node = database()
-          .ref('notification').child(request.hotel.uid)
+          .ref('notification')
+          .child(request.hotel.uid)
           .push();
         node.set({
           uid: node.key,
@@ -64,6 +75,33 @@ export class RequestService {
       await entityManager.save(request);
       await entityManager.save(employer);
     });
+  }
+
+  async getAdminRequest(hotelId: string, complete?: boolean, special?: boolean) {
+    const hotel = await getConnection()
+      .getRepository(HotelEntity)
+      .findOne({ where: { uid: hotelId } });
+    if (complete !== null && special !== null) {
+      return this.requestRepository.find({
+        where: { hotel, complete, special },
+        relations: ['guest', 'room', 'zone', 'solved'],
+      });
+    } else if (complete == null) {
+      return this.requestRepository.find({
+        where: { hotel, special },
+        relations: ['guest', 'room', 'zone', 'solved'],
+      });
+    } else if (special == null) {
+      return this.requestRepository.find({
+        where: { hotel, complete },
+        relations: ['guest', 'room', 'zone', 'solved'],
+      });
+    } else {
+      return this.requestRepository.find({
+        where: { hotel },
+        relations: ['guest', 'room', 'zone', 'solved'],
+      });
+    }
   }
 
   async getRequestByHotel(hotelId: string) {
@@ -111,5 +149,38 @@ export class RequestService {
         await entityManager.save(employer);
       }
     });
+  }
+
+  private checkRequestValid(request: RequestEntity) {
+    const call = async () => {
+      const requestEntity = await this.requestRepository.findOne(request.id, { relations: ['solved'] });
+      if (!requestEntity.solved) {
+        await this.requestRepository.update(request.id, { public: true });
+        const snap = await database()
+          .ref('user-tokens')
+          .once('value');
+        const userTokens: UserTokes = snap.val();
+        if (!!userTokens) {
+          const tokens = Object.values(userTokens).reduce((previousValue, currentValue) => {
+            return [...previousValue, ...Object.keys(currentValue)];
+          }, []);
+          this.http
+            .post('https://onesignal.com/api/v1/notifications', {
+              app_id: process.env.ONE_SIGNAL,
+              include_player_ids: tokens,
+              contents: {
+                es: 'Hay una nueva solicitud esperando a ser atendida',
+                en: 'Hay una nueva solicitud esperando a ser atendida',
+              },
+              headings: {
+                es: 'Nueva solicitud',
+              },
+            })
+            .subscribe();
+        }
+      }
+    };
+    const timeOut = setTimeout(call, 1000);
+    this.schedulerRegistry.addTimeout('check:' + request.id, timeOut);
   }
 }

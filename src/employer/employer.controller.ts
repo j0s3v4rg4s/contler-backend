@@ -23,8 +23,10 @@ export class EmployerController {
   }
 
   @Get(':id/request')
-  getRequestEmployer(@Param('id') id: string, @Query('complete') complete: string) {
-    return this.employerService.getLeaderRequests(id, complete === 't');
+  async getRequestEmployer(@Param('id') id: string, @Query('complete') complete: string) {
+    const publicReq = await this.employerService.getPublicRequest(id, complete === 't');
+    const zoneReq = await this.employerService.getLeaderRequests(id, complete === 't');
+    return [...publicReq, ...zoneReq];
   }
 
   @Delete(':id')

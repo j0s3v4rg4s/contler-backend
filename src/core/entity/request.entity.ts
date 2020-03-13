@@ -16,14 +16,17 @@ export class RequestEntity {
   @Column()
   createAt!: Date;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   finishAt!: Date;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   score!: number;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   comment!: string;
+
+  @Column({ default: false })
+  public!: boolean;
 
   @Column()
   special!: boolean;

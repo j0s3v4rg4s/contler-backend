@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { HotelController } from './hotel.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from '../core/entity';
@@ -12,7 +12,7 @@ import { RequestService } from '../core/services/request/request.service';
 import { ReservationService } from '../core/services/reservation/reservation.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature(entities)],
+  imports: [TypeOrmModule.forFeature(entities), HttpModule],
   controllers: [HotelController],
   providers: [HotelService, EmployerService, RoomService, UserService, GuestService, WakeUpService, RequestService, ReservationService],
 })
