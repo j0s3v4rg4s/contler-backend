@@ -10,10 +10,21 @@ import { GuestService } from '../core/services/guest/guest.service';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 import { RequestService } from '../core/services/request/request.service';
 import { ReservationService } from '../core/services/reservation/reservation.service';
+import { ProductService } from '../core/services/product/product.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature(entities), HttpModule],
   controllers: [HotelController],
-  providers: [HotelService, EmployerService, RoomService, UserService, GuestService, WakeUpService, RequestService, ReservationService],
+  providers: [
+    HotelService,
+    EmployerService,
+    RoomService,
+    UserService,
+    GuestService,
+    WakeUpService,
+    RequestService,
+    ReservationService,
+    ProductService,
+  ],
 })
 export class HotelModule {}

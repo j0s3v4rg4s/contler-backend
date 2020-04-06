@@ -8,6 +8,7 @@ import { GuestService } from '../core/services/guest/guest.service';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 import { RequestService } from '../core/services/request/request.service';
 import { ReservationService } from '../core/services/reservation/reservation.service';
+import { ProductService } from '../core/services/product/product.service';
 
 @Controller('hotel')
 export class HotelController {
@@ -19,6 +20,7 @@ export class HotelController {
     private wakeService: WakeUpService,
     private requestService: RequestService,
     private reservationService: ReservationService,
+    private productService: ProductService,
   ) {}
 
   @Get('category')
@@ -108,5 +110,10 @@ export class HotelController {
   @Get(':id/booking')
   getBooking(@Param('id') id: string) {
     return this.reservationService.getBookingByHotel(id);
+  }
+
+  @Get(':id/product')
+  getProducts(@Param('id') id: string) {
+    return this.productService.getAllProducts(id);
   }
 }

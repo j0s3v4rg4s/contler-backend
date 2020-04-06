@@ -176,7 +176,7 @@ export class RequestService {
                 es: 'Nueva solicitud',
               },
             })
-            .subscribe(respond => console.log(respond.data));
+            .subscribe();
         }
       }
     };

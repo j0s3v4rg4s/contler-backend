@@ -7,6 +7,7 @@ import { WakeUpEntity } from './wake-up.entity';
 import { RequestEntity } from './request.entity';
 import { ZoneReserveEntity } from './zone-reserve.entity';
 import { BookingEntity } from './booking.entity';
+import { ProductEntity } from './product.entity';
 
 @Entity({ name: 'hotel' })
 export class HotelEntity {
@@ -49,4 +50,7 @@ export class HotelEntity {
 
   @OneToMany(() => BookingEntity, booking => booking.hotel)
   booking!: BookingEntity[];
+
+  @OneToMany(() => ProductEntity, product => product.hotel)
+  products!: ProductEntity[];
 }
