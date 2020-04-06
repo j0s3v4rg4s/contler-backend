@@ -38,6 +38,15 @@ export class EmployerEntity {
   @Column({ nullable: true })
   pushToken!: string;
 
+  @Column({ default: false })
+  wakeZone!: boolean;
+
+  @Column({ default: false })
+  lateZone!: boolean;
+
+  @Column({ default: false })
+  deliveryZone!: boolean;
+
   @ManyToOne(() => HotelEntity, hotel => hotel.employees)
   hotel!: HotelEntity;
 

@@ -176,11 +176,11 @@ export class RequestService {
                 es: 'Nueva solicitud',
               },
             })
-            .subscribe();
+            .subscribe(respond => console.log(respond.data));
         }
       }
     };
-    const timeOut = setTimeout(call, 1000);
+    const timeOut = setTimeout(call, 60000);
     this.schedulerRegistry.addTimeout('check:' + request.id, timeOut);
   }
 }

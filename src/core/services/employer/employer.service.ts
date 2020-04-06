@@ -47,6 +47,7 @@ export class EmployerService {
   }
 
   updateEmployer(employer: EmployerEntity) {
+    delete employer.averageTime;
     return this.employerRepository.save(employer);
   }
 
