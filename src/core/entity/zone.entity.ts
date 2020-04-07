@@ -3,6 +3,7 @@ import { HotelEntity } from './hotel.entity';
 import { CategoryEntity } from './category.entity';
 import { EmployerEntity } from './employer.entity';
 import { RequestEntity } from './request.entity';
+import { OrderEntity } from './order.entity';
 
 @Entity('zone')
 export class ZoneEntity {
@@ -30,4 +31,7 @@ export class ZoneEntity {
 
   @OneToMany(() => RequestEntity, request => request.zone)
   request!: RequestEntity[];
+
+  @OneToMany(() => OrderEntity, order => order.zone)
+  orders!: OrderEntity[];
 }

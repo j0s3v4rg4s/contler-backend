@@ -10,6 +10,8 @@ import { ZoneReserveEntity } from './zone-reserve.entity';
 import { ScheduleEntity } from './schedule.entity';
 import { BookingEntity } from './booking.entity';
 import { ProductEntity } from './product.entity';
+import { ProductOrderEntity } from './product-order.entity';
+import { OrderEntity } from './order.entity';
 
 export * from './hotel.entity';
 export * from './employer.entity';
@@ -22,6 +24,8 @@ export * from './zone-reserve.entity';
 export * from './schedule.entity';
 export * from './booking.entity';
 export * from './product.entity';
+export * from './product-order.entity';
+export * from './order.entity';
 
 export const entities = [
   HotelEntity,
@@ -36,4 +40,6 @@ export const entities = [
   ScheduleEntity,
   BookingEntity,
   ProductEntity,
+  ProductOrderEntity,
+  OrderEntity
 ];

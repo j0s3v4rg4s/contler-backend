@@ -4,6 +4,7 @@ import { RoomEntity } from './room.entity';
 import { WakeUpEntity } from './wake-up.entity';
 import { RequestEntity } from './request.entity';
 import { BookingEntity } from './booking.entity';
+import { OrderEntity } from './order.entity';
 
 @Entity('guest')
 export class GuestEntity {
@@ -46,4 +47,7 @@ export class GuestEntity {
 
   @OneToMany(() => BookingEntity, booking => booking.guest)
   booking!: BookingEntity[];
+
+  @OneToMany(() => OrderEntity, order => order.guest)
+  orders!: OrderEntity[];
 }
