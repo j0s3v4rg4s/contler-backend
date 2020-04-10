@@ -26,4 +26,7 @@ export class OrderEntity {
 
   @Column()
   time!: Date;
+
+  @Column({ default: 0 })
+  state: number;
 }

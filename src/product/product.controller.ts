@@ -27,4 +27,9 @@ export class ProductController {
   createOrder(@Body() request: OrderRequest) {
     return this.productService.createOrder(request);
   }
+
+  @Get('order/:id')
+  getOrder(@Param('id') id: number) {
+    return this.productService.getOrder(id);
+  }
 }

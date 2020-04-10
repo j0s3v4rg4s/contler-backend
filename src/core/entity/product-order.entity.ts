@@ -7,8 +7,7 @@ export class ProductOrderEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @OneToOne(() => ProductEntity)
-  @JoinColumn()
+  @ManyToOne(() => ProductEntity)
   product!: ProductEntity;
 
   @Column()

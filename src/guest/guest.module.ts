@@ -7,10 +7,11 @@ import { UserService } from '../core/services/user/user.service';
 import { HotelService } from '../core/services/hotel/hotel.service';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 import { ReservationService } from '../core/services/reservation/reservation.service';
+import { ProductService } from '../core/services/product/product.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature(entities)],
   controllers: [GuestController],
-  providers: [GuestService, UserService, HotelService, WakeUpService, ReservationService],
+  providers: [GuestService, UserService, HotelService, WakeUpService, ReservationService, ProductService],
 })
 export class GuestModule {}

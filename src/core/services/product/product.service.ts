@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { HotelEntity, OrderEntity, ProductEntity, ProductOrderEntity } from '../../entity';
+import { GuestEntity, HotelEntity, OrderEntity, ProductEntity, ProductOrderEntity } from '../../entity';
 import { getConnection, Repository } from 'typeorm';
 import { ProductRequest } from '../../models/product-request';
 import { OrderRequest } from '../../models/order-request';
@@ -57,6 +57,19 @@ export class ProductService {
     order.zone = request.zone;
     order.comment = request.comment;
     order.time = new Date(request.time);
+    order.guest = request.guest;
     return this.orderEntityRepository.save(order);
+  }
+
+  async getOrderByGuest(idGuest: string) {
+    const guestRepository = getConnection().getRepository(GuestEntity);
+    const guest = await guestRepository.findOne(idGuest);
+    return this.orderEntityRepository.find({ where: { guest }, relations: ['productsOrder', 'productsOrder.product'] });
+  }
+
+  getOrder(orderID: number) {
+    return this.orderEntityRepository.findOne(orderID, {
+      relations: ['productsOrder', 'productsOrder.product', 'zone', 'guest', 'guest.room'],
+    });
   }
 }

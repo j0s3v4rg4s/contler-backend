@@ -4,6 +4,7 @@ import { GuestRequest } from '../core/models/guest-request';
 import { GuestEntity } from '../core/entity';
 import { WakeUpService } from '../core/services/wake-up/wake-up.service';
 import { ReservationService } from '../core/services/reservation/reservation.service';
+import { ProductService } from '../core/services/product/product.service';
 
 @Controller('guest')
 export class GuestController {
@@ -11,6 +12,7 @@ export class GuestController {
     private guestService: GuestService,
     private wakeService: WakeUpService,
     private reservationService: ReservationService,
+    private productService: ProductService,
   ) {}
 
   @Post()
@@ -46,5 +48,10 @@ export class GuestController {
   @Get(':id/reservation')
   getReservation(@Param('id') id: string) {
     return this.reservationService.getBookingByGuest(id);
+  }
+
+  @Get(':id/order')
+  getOrders(@Param('id') id: string) {
+    return this.productService.getOrderByGuest(id);
   }
 }
