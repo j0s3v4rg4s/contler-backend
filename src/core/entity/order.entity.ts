@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ProductOrderEntity } from './product-order.entity';
 import { HotelEntity } from './hotel.entity';
 import { GuestEntity } from './guest.entity';
@@ -20,4 +20,10 @@ export class OrderEntity {
 
   @ManyToOne(() => ZoneEntity, zone => zone.orders)
   zone!: ZoneEntity;
+
+  @Column({ nullable: true })
+  comment!: string;
+
+  @Column()
+  time!: Date;
 }

@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ProductService } from '../core/services/product/product.service';
 import { ProductRequest } from '../core/models/product-request';
 import { ProductEntity } from '../core/entity';
+import { OrderRequest } from '../core/models/order-request';
 
 @Controller('product')
 export class ProductController {
@@ -20,5 +21,10 @@ export class ProductController {
   @Get('id')
   getProduct(@Param('id') id: number) {
     return this.productService.getProduct(id);
+  }
+
+  @Post('order')
+  createOrder(@Body() request: OrderRequest) {
+    return this.productService.createOrder(request);
   }
 }
