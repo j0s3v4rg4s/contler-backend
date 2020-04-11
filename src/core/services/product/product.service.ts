@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GuestEntity, HotelEntity, OrderEntity, ProductEntity, ProductOrderEntity } from '../../entity';
 import { getConnection, Repository } from 'typeorm';
@@ -39,6 +39,18 @@ export class ProductService {
 
   getProduct(productId: number) {
     return this.productRepository.findOne({ id: productId });
+  }
+
+  async deleteProduct(productId: number) {
+    const orders = await getConnection()
+      .createQueryBuilder(OrderEntity, 'order')
+      .innerJoin('order.productsOrder', 'prod', 'prod.order.id = order.id')
+      .where('prod.id = :productId', { productId })
+      .getMany();
+    if (orders.length) {
+      throw new HttpException('No se puede eliminar el producto', HttpStatus.BAD_REQUEST);
+    }
+    return this.productRepository.delete(productId);
   }
 
   async createOrder(request: OrderRequest) {

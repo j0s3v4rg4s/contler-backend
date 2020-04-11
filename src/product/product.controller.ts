@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ProductService } from '../core/services/product/product.service';
 import { ProductRequest } from '../core/models/product-request';
 import { ProductEntity } from '../core/entity';
@@ -13,14 +13,19 @@ export class ProductController {
     return this.productService.create(request);
   }
 
-  @Post('id')
+  @Post(':id')
   updateProduct(@Body() request: ProductEntity) {
     return this.productService.updateProduct(request);
   }
 
-  @Get('id')
+  @Get(':id')
   getProduct(@Param('id') id: number) {
     return this.productService.getProduct(id);
+  }
+
+  @Delete(':id')
+  deleteProduct(@Param('id') id: number) {
+    return this.productService.deleteProduct(id);
   }
 
   @Post('order')
