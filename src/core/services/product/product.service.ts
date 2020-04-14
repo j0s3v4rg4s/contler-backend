@@ -84,4 +84,13 @@ export class ProductService {
       relations: ['productsOrder', 'productsOrder.product', 'zone', 'guest', 'guest.room'],
     });
   }
+
+  async getOrderByHotel(hotelId: string) {
+    const hotelRepository = getConnection().getRepository(HotelEntity);
+    const hotel = await hotelRepository.findOne(hotelId);
+    return this.orderEntityRepository.find({
+      where: { hotel },
+      relations: ['productsOrder', 'productsOrder.product', 'guest', 'zone', 'guest.room'],
+    });
+  }
 }

@@ -116,4 +116,9 @@ export class HotelController {
   getProducts(@Param('id') id: string) {
     return this.productService.getAllProducts(id);
   }
+
+  @Get(':id/orders')
+  getOrders(@Param('id') id: string) {
+    return this.productService.getOrderByHotel(id);
+  }
 }
