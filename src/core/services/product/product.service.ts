@@ -81,7 +81,7 @@ export class ProductService {
 
   getOrder(orderID: number) {
     return this.orderEntityRepository.findOne(orderID, {
-      relations: ['productsOrder', 'productsOrder.product', 'zone', 'guest', 'guest.room'],
+      relations: ['productsOrder', 'productsOrder.product', 'zone', 'guest', 'guest.room', 'employer'],
     });
   }
 
@@ -90,7 +90,18 @@ export class ProductService {
     const hotel = await hotelRepository.findOne(hotelId);
     return this.orderEntityRepository.find({
       where: { hotel },
-      relations: ['productsOrder', 'productsOrder.product', 'guest', 'zone', 'guest.room'],
+      relations: ['productsOrder', 'productsOrder.product', 'guest', 'zone', 'guest.room', 'employer'],
     });
+  }
+
+  updateOrder(order: OrderEntity) {
+    const newOrder = { ...order };
+    delete newOrder.id;
+    delete newOrder.productsOrder;
+    return this.orderEntityRepository.update(order.id, newOrder);
+  }
+
+  deleteOrder(orderId: number) {
+    return this.orderEntityRepository.delete(orderId);
   }
 }

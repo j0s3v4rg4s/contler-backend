@@ -3,6 +3,7 @@ import { ProductOrderEntity } from './product-order.entity';
 import { HotelEntity } from './hotel.entity';
 import { GuestEntity } from './guest.entity';
 import { ZoneEntity } from './zone.entity';
+import { EmployerEntity } from './employer.entity';
 
 @Entity({ name: 'order' })
 export class OrderEntity {
@@ -21,6 +22,9 @@ export class OrderEntity {
   @ManyToOne(() => ZoneEntity, zone => zone.orders)
   zone!: ZoneEntity;
 
+  @ManyToOne(() => EmployerEntity, employer => employer.order)
+  employer: EmployerEntity;
+
   @Column({ nullable: true })
   comment!: string;
 
@@ -29,4 +33,10 @@ export class OrderEntity {
 
   @Column({ default: 0 })
   state: number;
+
+  @Column({nullable: true})
+  qualification: number;
+
+  @Column({nullable: true})
+  dateComplete: Date;
 }

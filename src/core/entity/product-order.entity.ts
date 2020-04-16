@@ -13,6 +13,6 @@ export class ProductOrderEntity {
   @Column()
   quantity!: number;
 
-  @ManyToOne(() => OrderEntity, order => order.productsOrder)
+  @ManyToOne(() => OrderEntity, order => order.productsOrder, { onDelete: 'CASCADE' })
   order: OrderEntity;
 }

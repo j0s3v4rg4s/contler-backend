@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryCol
 import { HotelEntity } from './hotel.entity';
 import { ZoneEntity } from './zone.entity';
 import { RequestEntity } from './request.entity';
+import { OrderEntity } from './order.entity';
 
 @Entity({ name: 'employer' })
 export class EmployerEntity {
@@ -59,4 +60,7 @@ export class EmployerEntity {
 
   @OneToMany(() => RequestEntity, request => request.solved)
   requestSolved!: RequestEntity[];
+
+  @OneToMany(() => OrderEntity, order => order.employer)
+  order: OrderEntity;
 }
