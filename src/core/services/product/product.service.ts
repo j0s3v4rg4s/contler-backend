@@ -63,6 +63,7 @@ export class ProductService {
         return productOrder;
       }),
     );
+    console.log(productList);
     const order = this.orderEntityRepository.create();
     order.productsOrder = productList;
     order.hotel = request.hotel;

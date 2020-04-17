@@ -8,26 +8,6 @@ import { OrderRequest } from '../core/models/order-request';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Post()
-  createProduct(@Body() request: ProductRequest) {
-    return this.productService.create(request);
-  }
-
-  @Post(':id')
-  updateProduct(@Body() request: ProductEntity) {
-    return this.productService.updateProduct(request);
-  }
-
-  @Get(':id')
-  getProduct(@Param('id') id: number) {
-    return this.productService.getProduct(id);
-  }
-
-  @Delete(':id')
-  deleteProduct(@Param('id') id: number) {
-    return this.productService.deleteProduct(id);
-  }
-
   @Post('order')
   createOrder(@Body() request: OrderRequest) {
     return this.productService.createOrder(request);
@@ -46,5 +26,25 @@ export class ProductController {
   @Delete('order/:id')
   deleteOrder(@Param('id') id: number) {
     return this.productService.deleteOrder(id);
+  }
+
+  @Post()
+  createProduct(@Body() request: ProductRequest) {
+    return this.productService.create(request);
+  }
+
+  @Post(':id')
+  updateProduct(@Body() request: ProductEntity) {
+    return this.productService.updateProduct(request);
+  }
+
+  @Get(':id')
+  getProduct(@Param('id') id: number) {
+    return this.productService.getProduct(id);
+  }
+
+  @Delete(':id')
+  deleteProduct(@Param('id') id: number) {
+    return this.productService.deleteProduct(id);
   }
 }
