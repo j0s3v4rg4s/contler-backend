@@ -180,7 +180,7 @@ export class RequestService {
         }
       }
     };
-    const timeOut = setTimeout(call, 60000);
+    const timeOut = setTimeout(call, 300000);
     this.schedulerRegistry.addTimeout('check:' + request.id, timeOut);
   }
 }
