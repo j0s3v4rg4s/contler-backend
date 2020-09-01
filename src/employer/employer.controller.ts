@@ -23,10 +23,12 @@ export class EmployerController {
   }
 
   @Get(':id/request')
-  async getRequestEmployer(@Param('id') id: string, @Query('complete') complete: string) {
-    const publicReq = await this.employerService.getPublicRequest(id, complete === 't');
-    const zoneReq = await this.employerService.getLeaderRequests(id, complete === 't');
-    return [...publicReq, ...zoneReq];
+  async getRequestEmployer(@Param('id') id: string, @Query('complete') complete: string, @Query('time') time?: string) {
+    const timeLast = !!time && Number(time) && Number(time) > 0 ? Number(time) : null;
+
+    const publicReq = await this.employerService.getPublicRequest(id, complete === 't', timeLast);
+    const zoneReq = await this.employerService.getLeaderRequests(id, complete === 't', timeLast);
+    return [...publicReq, ...zoneReq].sort((a, b) => b.createAt.getTime() - a.createAt.getTime());
   }
 
   @Delete(':id')

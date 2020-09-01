@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmployerEntity, RequestEntity, ZoneEntity } from '../../entity';
-import { getConnection, Repository } from 'typeorm';
+import { getConnection, MoreThanOrEqual, Repository } from 'typeorm';
 import { AdminRequest } from '../../models/admin-request';
 import { ADMIN, Roles } from '../../const/roles';
 import { EmployerRequest } from '../../models/employer-request';
 import { auth } from 'firebase-admin';
 import { HotelService } from '../hotel/hotel.service';
 import { UserService } from '../user/user.service';
+import { DAY_TIME } from '../../const/times';
+import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 
 @Injectable()
 export class EmployerService {
@@ -66,8 +68,8 @@ export class EmployerService {
     return employer;
   }
 
-  async getLeaderRequests(idEmployer: string, complete: boolean) {
-    return getConnection()
+  async getLeaderRequests(idEmployer: string, complete: boolean, time?: number) {
+    let query = getConnection()
       .createQueryBuilder(RequestEntity, 'req')
       .leftJoinAndSelect('req.guest', 'guest')
       .leftJoinAndSelect('req.zone', 'zone')
@@ -76,16 +78,30 @@ export class EmployerService {
       .innerJoin('req.zone', 'zonet')
       .innerJoin('zonet.leaders', 'leader', 'leader.uid = :id', { id: idEmployer })
       .where('req.complete = :complete', { complete })
-      .andWhere('req.public = false')
-      .getMany();
+      .andWhere('req.public = false');
+
+    if (time > 0) {
+      const date = new Date(Date.now() - DAY_TIME * time);
+      query = query.andWhere('req.createAt >= :date', { date });
+    }
+
+    return query.orderBy('req.createAt', 'DESC').getMany();
   }
 
-  async getPublicRequest(idEmployer: string, complete: boolean) {
+  async getPublicRequest(idEmployer: string, complete: boolean, time?: number) {
     const employerEntity = await this.employerRepository.findOne({ uid: idEmployer }, { relations: ['hotel'] });
     const reqRepository = getConnection().getRepository(RequestEntity);
-    return reqRepository.find({
+
+    const optSearch: any = {
       where: { complete, public: true, hotel: employerEntity.hotel },
       relations: ['guest', 'zone', 'room', 'solved'],
-    });
+    };
+
+    if (time > 0) {
+      const date = new Date(Date.now() - DAY_TIME * time);
+      optSearch.where = { ...optSearch.where, createAt: MoreThanOrEqual(date) };
+    }
+
+    return reqRepository.find(optSearch);
   }
 }
